@@ -18,7 +18,7 @@ namespace MistForest.Core.GameRefactored
 
     public interface IScoutOnlyAction: IScoutAction { }
 
-    public class GeneralMove : Action, IScoutAction, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction
+    public class GeneralMove : Action, IScoutAction, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction, IShadowAction
     {
         public Node Target { get; private set; }
 
@@ -30,7 +30,7 @@ namespace MistForest.Core.GameRefactored
         }
     }
 
-    public class GeneralEnd : Action, IScoutAction, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction
+    public class GeneralEnd : Action, IScoutAction, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction, IShadowAction
     {
         public static GeneralEnd New(int callerUnitId)
         {
@@ -40,7 +40,7 @@ namespace MistForest.Core.GameRefactored
         }
     }
 
-    public class GeneralSurrender : Action, IScoutAction, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction
+    public class GeneralSurrender : Action, IScoutAction, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction, IShadowAction
     {
         public static GeneralSurrender New(int callerUnitId)
         {
@@ -50,7 +50,7 @@ namespace MistForest.Core.GameRefactored
         }
     }
 
-    public class GeneralBuildFort : Action, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction
+    public class GeneralBuildFort : Action, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction, IShadowAction
     {
         public Node Target { get; private set; }
 
@@ -62,7 +62,7 @@ namespace MistForest.Core.GameRefactored
         }
     }
 
-    public class GeneralBuildWall : Action, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction
+    public class GeneralBuildWall : Action, ISniperAction, IWolfAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction, IShadowAction
     {
         public Node[] Targets { get; private set; }
 
@@ -84,7 +84,7 @@ namespace MistForest.Core.GameRefactored
         }
     }
 
-    public class GeneralDemolish : Action, ISniperAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction
+    public class GeneralDemolish : Action, ISniperAction, IAlphaAction, IInkAction, IArmigerAction, IHeavyAction, IHiddenWolfAction, IShadowAction
     {
         public Node Target { get; private set; }
 
