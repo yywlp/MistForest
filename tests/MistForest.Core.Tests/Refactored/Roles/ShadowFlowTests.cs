@@ -38,6 +38,9 @@ namespace MistForest.Core.Tests.Refactored.Roles
 
         private static void AssertNoActions(UnitView view)
         {
+            Assert.Empty(Assert.IsType<ShadowUnitView>(view).CanAttackGrids);
+            Assert.Empty(Assert.IsType<ShadowUnitView>(view).CanFollowUnitIds);
+            Assert.Empty(Assert.IsType<ShadowUnitView>(view).CanDragUnitIds);
             Assert.Empty(view.CanMoveGrids);
             Assert.Empty(view.CanBuildFortGrids);
             Assert.Empty(view.CanBuildWallGrids);
@@ -265,17 +268,24 @@ namespace MistForest.Core.Tests.Refactored.Roles
             Board.Node target = game.Board.At(2, 3)!.Value;
             ShadowUnitView view = ShadowUnitView.New(
                 Box.New(View(game).CanMoveGrids),
-                Box.New(new[] { target }), Box.New(new[] { target }), Box.New(new[] { target }))!;
+                Box.New(new[] { target }), Box.New(new[] { target }), Box.New(new[] { target }),
+                Box.New(new[] { target }), Box.New(new[] { 1 }), Box.New(new[] { 1 }))!;
             ShadowUnitView clone = Assert.IsType<ShadowUnitView>(view.Clone());
             var originalMove = view.CanMoveGrids[0];
             clone.CanMoveGrids[0] = (Role(game).Unit.Position, 0, null);
             clone.CanBuildFortGrids[0] = Role(game).Unit.Position;
             clone.CanBuildWallGrids[0] = Role(game).Unit.Position;
             clone.CanDemolishGrids[0] = Role(game).Unit.Position;
+            clone.CanAttackGrids[0] = Role(game).Unit.Position;
+            clone.CanFollowUnitIds[0] = 99;
+            clone.CanDragUnitIds[0] = 99;
             Assert.Equal(originalMove, view.CanMoveGrids[0]);
             Assert.Equal(target, view.CanBuildFortGrids[0]);
             Assert.Equal(target, view.CanBuildWallGrids[0]);
             Assert.Equal(target, view.CanDemolishGrids[0]);
+            Assert.Equal(target, view.CanAttackGrids[0]);
+            Assert.Equal(new[] { 1 }, view.CanFollowUnitIds);
+            Assert.Equal(new[] { 1 }, view.CanDragUnitIds);
         }
 
         [Theory]

@@ -207,7 +207,7 @@ namespace MistForest.Core.GameRefactored
             if (
                 Players[playerId]
                     .Roles.AsValueEnumerable()
-                    .Where(role => role.Id != caller.RoleId)
+                    .Where(role => role.Id != caller.RoleId && role.Alive)
                     .Any(role => role.HasStartedTurn)
             )
             {
@@ -244,6 +244,7 @@ namespace MistForest.Core.GameRefactored
 
         private void EndTurn()
         {
+            ShadowAttachment.EndTurn(CurrentPlayerId, this);
             ++_turnCount;
             _roundActed[CurrentPlayerId] = true;
 
@@ -283,6 +284,11 @@ namespace MistForest.Core.GameRefactored
                 PrepareTurn();
             } while (!Players[CurrentPlayerId].Alive);
         }
+
+        internal void NotifyUnitMoved(Unit unit, Board.Node from, Board.Node to)
+            => ShadowAttachment.OnMoved(unit, from, to, this);
+
+        internal void ClearShadowLinks(int unitId) => ShadowAttachment.RemoveUnit(unitId, this);
 
         public void PrepareTurn()
         {

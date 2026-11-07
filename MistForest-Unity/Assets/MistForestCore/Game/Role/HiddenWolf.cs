@@ -126,9 +126,8 @@ namespace MistForest.Core.GameRefactored.Roles
         public override int AttackRange => Form == HiddenWolfForm.Human
             ? HiddenWolfConsts.HiddenWolfHumanAttackRange : HiddenWolfConsts.HiddenWolfWolfAttackRange;
         public int AttackDamage => HiddenWolfConsts.HiddenWolfAttackDamage;
-        // TODO: Integrate human-form follow immunity with Shadow: pause an existing link without
-        // extending its expiry, and resume a still-valid link after returning to wolf form.
         public override bool CanBeDetected => Form != HiddenWolfForm.Human;
+        public override bool CanBeAttached => Form != HiddenWolfForm.Human;
         private bool CanMoveGeneral => Alive && !End && MoveUsed < MoveDistance
             && (Form == HiddenWolfForm.Wolf || AttackUsed == 0);
         private bool CanAttackGeneral => Alive && !End && AttackUsed == 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MistForest.Core.Consts;
 using MistForest.Core.GameMap;
+using MistForest.Core.GameRefactored.Roles;
 using MistForest.Core.Utils;
 using ZLinq;
 using static MistForest.Core.GameMap.Board;
@@ -76,6 +77,8 @@ namespace MistForest.Core.GameRefactored
         protected virtual int MoveDistance { get; set; }
         public bool Alive => Health > 0;
         public virtual bool CanBeDetected => true;
+        /// <summary>Whether attachment may currently copy movement to or from this unit.</summary>
+        public virtual bool CanBeAttached => true;
         public int WhirlpoolImmuneExpire { get; protected set; }
         public bool End { get; protected set; }
         public bool IsFirstAction { get; protected set; } = true;
@@ -405,7 +408,10 @@ namespace MistForest.Core.GameRefactored
                 .First(item => item.node == move.Target);
             Node[] path = GetPath(move.Target);
             MoveUsed += distance;
-            ChangePos(move.Target, game);
+            foreach (Node step in path.AsSpan(1..))
+            {
+                ChangePos(step, game);
+            }
             game.Events.Add(GeneralMoveEvent.New(Id, path));
         }
 
@@ -574,12 +580,17 @@ namespace MistForest.Core.GameRefactored
             }
         }
 
-        internal void ChangePos(Node target, Game game)
+        internal void ChangePos(Node target, Game game, bool notifyAttachments = true)
         {
+            Node from = Position;
             _lastMoveEntries = null;
             game.Board.GetGrid(Position)!.Units.Remove(Id);
             Position = target;
             game.Board.GetGrid(target)!.Units.Add(Id);
+            if (notifyAttachments)
+            {
+                game.NotifyUnitMoved(this, from, target);
+            }
         }
 
         internal Node[] GetPath(Node target)
@@ -607,6 +618,7 @@ namespace MistForest.Core.GameRefactored
             TemporaryShield = 0;
             _lastMoveEntries = null;
             game.Board.GetGrid(Position)!.Units.Remove(Id);
+            game.ClearShadowLinks(Id);
         }
 
         public virtual bool HasActionLeft(Game game)
